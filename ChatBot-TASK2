@@ -1,0 +1,66 @@
+from chatterbot import ChatBot
+from chatterbot.trainers import ChatterBotCorpusTrainer
+import tkinter as tk
+from tkinter import ttk
+
+# Create a new ChatBot instance
+
+chatbot = ChatBot('MyChatBot')
+
+# Create a new trainer for the chatbot
+
+trainer = ChatterBotCorpusTrainer(chatbot)
+
+# Train the chatbot based on the English corpus
+
+trainer.train('chatterbot.corpus.english')
+
+# Function to handle user input and chatbot responses
+
+def send_message(event=None):
+    user_message = user_input.get()
+    chat_history.config(state=tk.NORMAL)
+    chat_history.insert(tk.END, "You: " + user_message + "\n")
+    chat_history.config(state=tk.DISABLED)
+    chat_history.see(tk.END)
+    user_input.delete(0, tk.END)
+
+    bot_response = chatbot.get_response(user_message)
+    chat_history.config(state=tk.NORMAL)
+    chat_history.insert(tk.END, "ChatBot: " + str(bot_response) + "\n\n")
+    chat_history.config(state=tk.DISABLED)
+    chat_history.see(tk.END)
+
+# Create GUI window
+
+root = tk.Tk()
+root.title("ChatBot")
+
+# Configure GUI window
+
+root.geometry("400x500")
+root.resizable(width=False, height=False)
+
+# Create chat history display
+
+chat_history = tk.Text(root, bd=1, bg="lightgray", width=50, height=20)
+chat_history.config(state=tk.DISABLED)
+
+# Create user input field
+
+user_input = ttk.Entry(root, width=50)
+user_input.bind("<Return>", send_message)
+
+# Create send button
+
+send_button = ttk.Button(root, text="Send", command=send_message)
+
+# Place GUI components in the window
+
+chat_history.pack(pady=10)
+user_input.pack(side=tk.LEFT, padx=10)
+send_button.pack(side=tk.RIGHT, padx=10)
+
+# Start the GUI event loop
+
+root.mainloop()
